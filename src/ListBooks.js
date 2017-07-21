@@ -160,7 +160,7 @@ class ListBooks extends Component{
           </div>
         </div>
         <div className="open-search">
-          <Link to="/">Add a book</Link>
+          <Link to="/search">Add a book</Link>
         </div>
       </div>
     )
