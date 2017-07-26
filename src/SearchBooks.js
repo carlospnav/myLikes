@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import { get, getAll, update, search } from './BooksAPI'
+import escapeRegexExp from 'escape-string-regexp'
+import sortBy from 'sort-by'
 
 class SearchBooks extends Component{
 
@@ -8,15 +11,22 @@ class SearchBooks extends Component{
   }
 
   updateQuery = (query) => {
-    this.setState({ query: query })
+    this.setState({ query: query.trim() })
   }
 
   onSearchQuery = (event) => {
-    console.log(event.target.value);
     this.updateQuery(event.target.value)
    }
 
   render(){
+    let showingItems;
+    if (this.state.query) {
+      search(this.state.query).then((books) => { 
+        showingItems = books; 
+      });
+    } else {
+      showingItems = [];
+    }
     return(
       <div className="search-books">
         <div className="search-books-bar">
