@@ -1,32 +1,33 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { get, getAll, update, search } from './BooksAPI'
-import escapeRegexExp from 'escape-string-regexp'
-import sortBy from 'sort-by'
+import Books from './Books'
+import { search } from './BooksAPI'
 
 class SearchBooks extends Component{
 
   state = {
-    query: ''
+    query: '',
+    showingItems: []
+  }
+
+  updateItems = (items) => {
+    this.setState({ showingItems: items })
   }
 
   updateQuery = (query) => {
-    this.setState({ query: query.trim() })
+    this.setState({ query: query.trim() }, () =>{
+      if (this.state.query) {
+        search(this.state.query).then((books) => { 
+          this.updateItems(books)
+        });
+      } else {
+        this.updateItems([])
+      }
+    })
   }
 
-  onSearchQuery = (event) => {
-    this.updateQuery(event.target.value)
-   }
 
   render(){
-    let showingItems;
-    if (this.state.query) {
-      search(this.state.query).then((books) => { 
-        showingItems = books; 
-      });
-    } else {
-      showingItems = [];
-    }
     return(
       <div className="search-books">
         <div className="search-books-bar">
@@ -40,15 +41,17 @@ class SearchBooks extends Component{
               However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
               you don't find a specific author or title. Every search is limited by search terms.
             */}
-            <input value={ this.state.query } onChange={ this.onSearchQuery } type="text" placeholder="Search by title or author"/>
-            
+            <input value={ this.state.query } onChange={ event => this.updateQuery(event.target.value) } type="text" placeholder="Search by title or author"/>
           </div>
         </div>
         <div className="search-books-results">
-          <ol className="books-grid"></ol>
+          {( this.state.showingItems.length > 0) && (
+            <Books books={ this.state.showingItems }/>
+          )}  
         </div>
       </div>
-    )}
+    )
+  }
 }
 
 export default SearchBooks
