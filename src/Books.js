@@ -1,7 +1,13 @@
 import React, { Component } from 'react'
+import { BooksSelect } from './Utils'
 
 
 class Books extends Component{
+
+  updateComponent(bookToUpdate){
+    
+  }
+
   render(){
     return (
       <ol className="books-grid">
