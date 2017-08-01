@@ -1,21 +1,15 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import Books from './Books'
+import { BooksInSections } from './Utils'
 import { getAll } from "./BooksAPI"
 
 class ListBooks extends Component{
-  state = {
-    reading: [],
-    wantToRead: [],
-    read: []
-  }
+  state = new BooksInSections()
 
   componentWillMount() {
-    const booksToUpdate = { 
-      reading: [],
-      wantToRead: [],
-      read: []
-    }
+    const booksToUpdate = new BooksInSections() 
+
     getAll().then((books) => {
       books.forEach((book) => {
         switch(book.shelf){
