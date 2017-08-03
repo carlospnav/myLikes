@@ -1,13 +1,35 @@
 import React, { Component } from 'react'
+import { getAll } from './BooksAPI'
 import BooksSelect from './BooksSelect'
 
 
 class Books extends Component{
+  constructor(props){
+    super(props)
+
+    this.state= {
+      shelf: props.shelf,
+      shelfName: props.shelfName
+    }
+  }
+
+  updateShelf(shelfType){
+    getAll().then((books) => { 
+      this.setState( { shelf: books.filter((book) => {
+        return book.shelf === this.state.shelfName 
+      })}) 
+    })
+  }
+
+  componentWillReceiveProps(props){
+    this.setState({shelf: props.shelf, shelfName: props.shelfName})
+  }
 
   render(){
     return (
       <ol className="books-grid">
-        { this.props.books.map((book) => (
+        { (this.state.shelf.length > 0) && (
+          this.state.shelf.map((book) => (
           <li key={book.id}>
             <div className="book">
               <div className="book-top">
@@ -25,7 +47,7 @@ class Books extends Component{
                <div className="book-authors">{book.authors}</div> 
             </div>
           </li>
-        ))}
+        )))}
       </ol> 
     )
   }
