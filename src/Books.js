@@ -14,10 +14,11 @@ class Books extends Component{
   }
 
   updateShelf(shelfType){
-    getAll().then((books) => { 
-      this.setState( { shelf: books.filter((book) => {
-        return book.shelf === this.state.shelfName 
-      })}) 
+    getAll().then((books) => {
+      this.setState( { 
+        shelf: books.filter((book) => { return book.shelf === this.state.shelfName }), 
+        shelfName: shelfType
+      }) 
     })
   }
 
@@ -40,7 +41,7 @@ class Books extends Component{
                   }}>
                 </div>
                 <div className="book-shelf-changer">
-                  <BooksSelect bookItem={book} />
+                  <BooksSelect cb={ this.updateShelf } bookItem={book} />
                 </div>
               </div>
               <div className="book-title">{book.title}</div>
