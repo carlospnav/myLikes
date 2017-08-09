@@ -4,4 +4,3 @@ export class BooksInSections {
   wantToRead = []
   read = []
 }
-

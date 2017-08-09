@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { update } from './BooksAPI'
 
 class BooksSelect extends Component{
 
@@ -7,24 +6,20 @@ class BooksSelect extends Component{
     super(props)
 
     this.state= {
-      shelf: this.props.bookItem.shelf,
+      shelf: this.props.shelf,
       cb: this.props.cb
     }
 
     this.handleChange = this.handleChange.bind(this)
   }
 
+  componentWillReceiveProps(props){
+    this.setState({shelf: props.shelf})
+  }
+
   handleChange(event){
-    const shelf = event.target.value
-    this.setState({shelf: shelf})
-    update(this.props.bookItem, shelf).then(
-      () => {
-        this.setState({shelf: shelf})
-        this.state.cb(shelf)
-      }
-    ).catch((e) => {
-      console.log('An error has occured: ' + e)
-    })
+    const shelf = event.currentTarget.value
+    this.state.cb(shelf)
   }
 
   render(){

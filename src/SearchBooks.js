@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Books from './Books'
+import Shelf from './Shelf'
 import { search } from './BooksAPI'
 
 class SearchBooks extends Component{
@@ -46,7 +46,7 @@ class SearchBooks extends Component{
         </div>
         <div className="search-books-results">
           {( this.state.showingItems.length > 0) && (
-            <Books books={ this.state.showingItems }/>
+            <Shelf books={ this.state.showingItems }/>
           )}  
         </div>
       </div>

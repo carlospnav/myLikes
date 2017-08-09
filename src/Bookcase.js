@@ -1,15 +1,34 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import Books from './Books'
 import { BooksInSections } from './Utils'
 import { getAll } from "./BooksAPI"
+import Shelf from './Shelf'
 
-class ListBooks extends Component{
-  state = new BooksInSections()
+
+
+class Bookcase extends Component{
+  constructor(props){
+    super(props)
+
+    this.state = {
+      read: [],
+      reading: [],
+      wantToRead: [],
+      updateBookCase: this.updateBookCase.bind(this),
+      getSortedBookcase: this.getSortedBookcase.bind(this)
+    }
+  }
 
   componentDidMount() {
-    const booksToUpdate = new BooksInSections() 
+    this.state.getSortedBookcase()
+  }
 
+  updateBookCase(){
+    this.state.getSortedBookcase()
+  }
+
+  getSortedBookcase(){
+    const booksToUpdate = new BooksInSections() 
     getAll().then((books) => {
       books.forEach((book) => {
         switch(book.shelf){
@@ -23,15 +42,15 @@ class ListBooks extends Component{
             booksToUpdate.read.push(book)
             break;
           default:
-          console.log('Book not sorted.')
+            console.log('Book not sorted.')
         }
       })
-    this.setState(booksToUpdate)
+      this.setState(booksToUpdate)
     })
   }
 
   render(){
-    const {reading, wantToRead, read} = this.state
+    const {read, reading, wantToRead} = this.state
     return(
       <div className="list-books">
         <div className="list-books-title">
@@ -44,7 +63,7 @@ class ListBooks extends Component{
               <div className="bookshelf-books">
                 <ol className="books-grid">
                   {(reading.length > 0) && (
-                    <Books shelf={ reading } shelfName="currentlyReading" />
+                    <Shelf shelfItems={ reading } cb={this.state.updateBookCase} />
                   )}
                 </ol>
               </div>
@@ -54,7 +73,7 @@ class ListBooks extends Component{
               <div className="bookshelf-books">
                 <ol className="books-grid">
                   {(wantToRead.length > 0) && (
-                    <Books shelf={ wantToRead } shelfName="wantToRead" />
+                    <Shelf shelfItems={ wantToRead } cb={this.state.updateBookCase} />
                   )}
                 </ol>
               </div>
@@ -64,7 +83,7 @@ class ListBooks extends Component{
               <div className="bookshelf-books">
                 <ol className="books-grid">
                   {(read.length > 0) && (
-                    <Books shelf={ read } shelfName="read"/>  
+                    <Shelf shelfItems={ read } cb={this.state.updateBookCase} />
                   )}                
                 </ol>
               </div>
@@ -79,4 +98,4 @@ class ListBooks extends Component{
   }
 }
 
-export default ListBooks
+export default Bookcase
