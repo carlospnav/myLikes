@@ -1,33 +1,53 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
-import Shelf from './Shelf'
 import { search } from './BooksAPI'
+import PropTypes from 'prop-types'
+import Shelf from './Shelf'
 
-class SearchBooks extends Component{
 
-  state = {
-    query: '',
-    showingItems: []
+class UnRouteredSearchBooks extends Component{
+
+  static propTypes = {
+    history: PropTypes.object.isRequired
   }
 
-  updateItems = (items) => {
-    this.setState({ showingItems: items })
+
+  constructor(props){
+    super(props)
+
+    this.state = {
+      query: '',
+      booksOnDisplay: [],
+      history: this.props.history
+    }
+  }
+
+  updateShelf = (books) => {
+    //COMPARE SEARCH RESULTS WITH BOOKCASE ITEMS
+    //AND ALLOCATE SHELVES PROPERLY BEFORE SENDING TO <SHELF>!!
+    this.setState({ booksOnDisplay: books })
   }
 
   updateQuery = (query) => {
     this.setState({ query: query.trim() }, () =>{
       if (this.state.query) {
         search(this.state.query).then((books) => { 
-          this.updateItems(books)
+          this.updateShelf(books)
         });
       } else {
-        this.updateItems([])
+        this.updateShelf([])
       }
     })
   }
 
+  handleBookSelect = () => {
+    this.state.history.push('/')
+  }
 
   render(){
+    let booksOnDisplay = this.state.booksOnDisplay
+    console.log('render ' + booksOnDisplay)
     return(
       <div className="search-books">
         <div className="search-books-bar">
@@ -45,8 +65,8 @@ class SearchBooks extends Component{
           </div>
         </div>
         <div className="search-books-results">
-          {( this.state.showingItems.length > 0) && (
-            <Shelf books={ this.state.showingItems }/>
+          {( this.state.booksOnDisplay.length > 0) && (
+            <Shelf cb={this.handleBookSelect} shelfItems={ this.state.booksOnDisplay } searchPage={true}/>
           )}  
         </div>
       </div>
@@ -54,4 +74,5 @@ class SearchBooks extends Component{
   }
 }
 
+const SearchBooks = withRouter(UnRouteredSearchBooks)
 export default SearchBooks

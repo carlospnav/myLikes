@@ -20,7 +20,6 @@ class BooksApp extends React.Component {
           <SearchBooks
           />
         )}/>
-
       </div>
     )
   }

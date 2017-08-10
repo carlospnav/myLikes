@@ -11,6 +11,7 @@ class Shelf extends Component{
       shelfItems: props.shelfItems,
       update: false,
       cb: props.cb,
+      searchPage: (props.searchPage) ? props.searchPage : false,
       handleShelfUpdate: this.handleShelfUpdate.bind(this)
     }
   }
@@ -18,7 +19,9 @@ class Shelf extends Component{
   handleShelfUpdate(book, shelf){
     update(book, shelf).then(
       () => {
-        this.setState({ update: true })
+        (this.state.searchPage) || (
+          this.setState({ update: true })
+        )
         this.state.cb()
       })
   }
@@ -30,14 +33,16 @@ class Shelf extends Component{
 
   render(){
     return (
-      <ol className="books-grid">
-        { (this.state.shelfItems.length > 0) && (
-          this.state.shelfItems.map((book) => (
-            <li key={book.id}>
-              <Book book={ book } cb={ this.state.handleShelfUpdate }/>
-            </li>
-        )))}
-      </ol> 
+      <div className="bookshelf-books">
+        <ol className="books-grid">
+          { (this.state.shelfItems.length > 0) && (
+            this.state.shelfItems.map((book) => (
+              <li key={book.id}>
+                <Book book={ book } cb={ this.state.handleShelfUpdate }/>
+              </li>
+          )))}
+        </ol> 
+      </div>
     )
   }
 }

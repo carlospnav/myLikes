@@ -60,33 +60,21 @@ class Bookcase extends Component{
           <div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Currently Reading</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {(reading.length > 0) && (
-                    <Shelf shelfItems={ reading } cb={this.state.updateBookCase} />
-                  )}
-                </ol>
-              </div>
+              {(reading.length > 0) && (
+                <Shelf shelfItems={ reading } cb={this.state.updateBookCase} />
+              )}
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Want to Read</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {(wantToRead.length > 0) && (
-                    <Shelf shelfItems={ wantToRead } cb={this.state.updateBookCase} />
-                  )}
-                </ol>
-              </div>
+              {(wantToRead.length > 0) && (
+                <Shelf shelfItems={ wantToRead } cb={this.state.updateBookCase} />
+              )}
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Read</h2>
-              <div className="bookshelf-books">
-                <ol className="books-grid">
-                  {(read.length > 0) && (
-                    <Shelf shelfItems={ read } cb={this.state.updateBookCase} />
-                  )}                
-                </ol>
-              </div>
+              {(read.length > 0) && (
+                <Shelf shelfItems={ read } cb={this.state.updateBookCase} />
+              )}                
             </div>
           </div>
         </div>
