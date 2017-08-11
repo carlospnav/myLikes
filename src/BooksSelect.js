@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 
+/* Select component receives the shelf name as props
+and the callback from the shelf to update itself. 
+*/
 class BooksSelect extends Component{
 
   constructor(props){
@@ -9,15 +12,20 @@ class BooksSelect extends Component{
       shelf: this.props.shelf,
       cb: this.props.cb
     }
-
-    this.handleChange = this.handleChange.bind(this)
   }
 
+  /* Once the Book re-renders, it sends down the shelf name
+  as prop and this will update the state with it. 
+  */
   componentWillReceiveProps(props){
     this.setState({shelf: props.shelf})
   }
 
-  handleChange(event){
+
+  /* Once the user selects an option, onChange event triggers this
+  handler, which calls the Book's callback to update the itself 
+  */
+  handleChange = (event) => {
     const shelf = event.currentTarget.value
     this.state.cb(shelf)
   }

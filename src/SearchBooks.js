@@ -1,11 +1,14 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 import { Link } from 'react-router-dom'
-import { search } from './BooksAPI'
+import { search, getAll } from './BooksAPI'
 import PropTypes from 'prop-types'
 import Shelf from './Shelf'
 
-
+/* Search component unattached to router from react-router. It gets
+access to the history via props once it's passed to the withRouter
+component down the file.  
+*/
 class UnRouteredSearchBooks extends Component{
 
   static propTypes = {
@@ -19,16 +22,46 @@ class UnRouteredSearchBooks extends Component{
     this.state = {
       query: '',
       booksOnDisplay: [],
+      bookIdsToCompare: [],
       history: this.props.history
     }
   }
 
-  updateShelf = (books) => {
-    //COMPARE SEARCH RESULTS WITH BOOKCASE ITEMS
-    //AND ALLOCATE SHELVES PROPERLY BEFORE SENDING TO <SHELF>!!
-    this.setState({ booksOnDisplay: books })
+  /* Once the component is mounted, it retrieves the bookcase 
+  and pushes every book id to a new array which gets added to 
+  the component's state. 
+  */
+  componentDidMount(){
+    const bookIdsToCompare = []
+    getAll().then((books) => {
+      books.forEach((book) => {
+        bookIdsToCompare.push(book.id)
+      })
+      this.setState({bookIdsToCompare: bookIdsToCompare})
+    })
   }
 
+  /* Compares each book id in the received book array, with the
+  id of the books in the bookcase, if they don't match, they aren't yet
+  sorted, and then it adds them to the shelf to be displayed in the search page,
+  properly initializing their shelf property to reflect that they are not yet sorted. 
+  */
+  updateShelf = (books) => {
+    const filteredBooks = []
+    books.forEach((book) => {
+      if (!this.state.bookIdsToCompare.includes(book.id)) {
+
+        book.shelf = 'none'
+        filteredBooks.push(book)
+      }
+    })
+    this.setState({ booksOnDisplay: filteredBooks })
+  }
+
+  /* Update the controlled form by setting the query state and then
+  searches the database with this query. If any books are found, calls
+  the handler to sort the books and update the shelf with them. 
+  */
   updateQuery = (query) => {
     this.setState({ query: query.trim() }, () =>{
       if (this.state.query) {
@@ -41,13 +74,14 @@ class UnRouteredSearchBooks extends Component{
     })
   }
 
+  /* Returns to the main page using the history prop from the withRouter component.
+  This callback is triggered by the shelf component.
+  */
   handleBookSelect = () => {
     this.state.history.push('/')
   }
 
   render(){
-    let booksOnDisplay = this.state.booksOnDisplay
-    console.log('render ' + booksOnDisplay)
     return(
       <div className="search-books">
         <div className="search-books-bar">
@@ -74,5 +108,8 @@ class UnRouteredSearchBooks extends Component{
   }
 }
 
+/* Connects the component with a Router that gives access to the history prop 
+which allows the search page to return to the main page programatically. 
+*/
 const SearchBooks = withRouter(UnRouteredSearchBooks)
 export default SearchBooks

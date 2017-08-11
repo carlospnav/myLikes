@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import BooksSelect from './BooksSelect'
 
+
+/* Book receives a book as prop from the shelf
+along with a callback to let shelf update itself. 
+*/
 class Book extends Component{
 
   constructor(props){
@@ -8,12 +12,15 @@ class Book extends Component{
 
     this.state = {
       book: this.props.book,
-      cb: props.cb,
-      handleUpdate: this.handleUpdate.bind(this)
+      cb: props.cb
     }
   }
 
-  handleUpdate(shelf){
+  /* Sends a book and the shelf selected by the user
+  to the shelf callback, so that it updates itself with
+  the new book 
+  */
+  handleUpdate = (shelf) => {
     this.state.cb(this.state.book, shelf)
   }
 
@@ -33,7 +40,7 @@ class Book extends Component{
             }}>
           </div> 
             <div className="book-shelf-changer">
-            <BooksSelect cb={ this.state.handleUpdate } shelf={book.shelf} />
+            <BooksSelect cb={ this.handleUpdate } shelf={book.shelf} />
           </div> 
         </div>
         <div className="book-title">{book.title}</div>

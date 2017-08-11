@@ -10,24 +10,25 @@ class Bookcase extends Component{
   constructor(props){
     super(props)
 
-    this.state = {
-      read: [],
-      reading: [],
-      wantToRead: [],
-      updateBookCase: this.updateBookCase.bind(this),
-      getSortedBookcase: this.getSortedBookcase.bind(this)
-    }
+    this.state = new BooksInSections()
   }
 
+  /*When component mounts, get the bookcase, sorted into the 3 different shelves
+  and store them into the state.
+  */
   componentDidMount() {
-    this.state.getSortedBookcase()
+    this.getSortedBookcase()
   }
 
-  updateBookCase(){
-    this.state.getSortedBookcase()
+  //Updates the bookcase.
+  updateBookCase = () => {
+    this.getSortedBookcase()
   }
 
-  getSortedBookcase(){
+  /*Retrieve books from back-end, sort them into
+  the 3 different shelves and update the state with them 
+  */
+  getSortedBookcase = () => {
     const booksToUpdate = new BooksInSections() 
     getAll().then((books) => {
       books.forEach((book) => {
@@ -61,19 +62,19 @@ class Bookcase extends Component{
             <div className="bookshelf">
               <h2 className="bookshelf-title">Currently Reading</h2>
               {(reading.length > 0) && (
-                <Shelf shelfItems={ reading } cb={this.state.updateBookCase} />
+                <Shelf shelfItems={ reading } cb={this.updateBookCase} />
               )}
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Want to Read</h2>
               {(wantToRead.length > 0) && (
-                <Shelf shelfItems={ wantToRead } cb={this.state.updateBookCase} />
+                <Shelf shelfItems={ wantToRead } cb={this.updateBookCase} />
               )}
             </div>
             <div className="bookshelf">
               <h2 className="bookshelf-title">Read</h2>
               {(read.length > 0) && (
-                <Shelf shelfItems={ read } cb={this.state.updateBookCase} />
+                <Shelf shelfItems={ read } cb={this.updateBookCase} />
               )}                
             </div>
           </div>
